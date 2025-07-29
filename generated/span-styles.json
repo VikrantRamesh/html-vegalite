@@ -1,0 +1,233 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 330.52,
+  "height": 108.4,
+  "background": "transparent",
+  "padding": 0,
+  "autosize": "none",
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  },
+  "resolve": {
+    "scale": {
+      "x": "independent",
+      "y": "independent"
+    }
+  },
+  "layer": [
+    {
+      "data": {
+        "values": [
+          {
+            "id": 0,
+            "text": "Error:",
+            "x": 20,
+            "y": 30
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 18,
+        "fontFamily": "Arial, sans-serif",
+        "fontWeight": "bold",
+        "fontStyle": "normal",
+        "color": "red",
+        "align": "left",
+        "baseline": "top"
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              330.52
+            ]
+          }
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              108.4
+            ]
+          }
+        },
+        "text": {
+          "field": "text",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "id": 1,
+            "text": " Connection failed. ",
+            "x": 94.51999999999998,
+            "y": 30
+          },
+          {
+            "id": 3,
+            "text": " Data saved. ",
+            "x": 110.72,
+            "y": 55.2
+          },
+          {
+            "id": 5,
+            "text": " Process complete.",
+            "x": 20,
+            "y": 80.4
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 18,
+        "fontFamily": "Arial, sans-serif",
+        "fontWeight": "normal",
+        "fontStyle": "normal",
+        "color": "#000000",
+        "align": "left",
+        "baseline": "top"
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              330.52
+            ]
+          }
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              108.4
+            ]
+          }
+        },
+        "text": {
+          "field": "text",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "id": 2,
+            "text": "Success:",
+            "x": 20,
+            "y": 55.2
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 18,
+        "fontFamily": "Arial, sans-serif",
+        "fontWeight": "normal",
+        "fontStyle": "italic",
+        "color": "green",
+        "align": "left",
+        "baseline": "top"
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              330.52
+            ]
+          }
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              108.4
+            ]
+          }
+        },
+        "text": {
+          "field": "text",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "id": 4,
+            "text": "Info:",
+            "x": 251.11999999999998,
+            "y": 55.2
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 18,
+        "fontFamily": "Arial, sans-serif",
+        "fontWeight": "normal",
+        "fontStyle": "normal",
+        "color": "blue",
+        "align": "left",
+        "baseline": "top"
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              330.52
+            ]
+          }
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              108.4
+            ]
+          }
+        },
+        "text": {
+          "field": "text",
+          "type": "nominal"
+        }
+      }
+    }
+  ]
+}

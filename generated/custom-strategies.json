@@ -1,0 +1,151 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 407.19999999999993,
+  "height": 108.4,
+  "background": "transparent",
+  "padding": 0,
+  "autosize": "none",
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  },
+  "resolve": {
+    "scale": {
+      "x": "independent",
+      "y": "independent"
+    }
+  },
+  "layer": [
+    {
+      "data": {
+        "values": [
+          {
+            "id": 0,
+            "text": "Error:",
+            "x": 20,
+            "y": 30
+          },
+          {
+            "id": 1,
+            "text": " Connection failed. ",
+            "x": 84.8,
+            "y": 30
+          },
+          {
+            "id": 2,
+            "text": "Success:",
+            "x": 300.79999999999995,
+            "y": 30
+          },
+          {
+            "id": 3,
+            "text": " Backup completed. ",
+            "x": 20,
+            "y": 55.2
+          },
+          {
+            "id": 6,
+            "text": " New price: $80",
+            "x": 138.79999999999998,
+            "y": 80.4
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 18,
+        "fontFamily": "Arial, sans-serif",
+        "fontWeight": "normal",
+        "fontStyle": "normal",
+        "color": "#000000",
+        "align": "left",
+        "baseline": "top"
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              407.19999999999993
+            ]
+          }
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              108.4
+            ]
+          }
+        },
+        "text": {
+          "field": "text",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "id": 4,
+            "text": "Old price: $100",
+            "x": 225.2,
+            "y": 55.2
+          },
+          {
+            "id": 5,
+            "text": "Strike this",
+            "x": 20,
+            "y": 80.4
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 18,
+        "fontFamily": "Arial, sans-serif",
+        "fontWeight": "normal",
+        "fontStyle": "normal",
+        "color": "#000000",
+        "align": "left",
+        "baseline": "top"
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              407.19999999999993
+            ]
+          }
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              108.4
+            ]
+          }
+        },
+        "text": {
+          "field": "text",
+          "type": "nominal"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML to Vega-Lite - Standalone Demo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vega/5.22.1/vega.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vega-lite/5.6.0/vega-lite.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vega-embed/6.21.0/vega-embed.min.js"></script>
+    <!-- Include the actual HTML to Vega-Lite library -->
+    <script src="../dist/index.umd.js"></script>
+    <style>
+        body { 
+            font-family: system-ui, -apple-system, sans-serif; 
+            margin: 0; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            background: rgba(255,255,255,0.95);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2d3748;
+            font-size: 2.5em;
+        }
+        .demo-section { 
+            margin: 30px 0; 
+            padding: 25px; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 12px;
+            background: #f7fafc;
+        }
+        .demo-section h3 {
+            margin-top: 0;
+            color: #2d3748;
+            border-bottom: 3px solid #4299e1;
+            padding-bottom: 10px;
+        }
+        .html-input { 
+            background: #2d3748; 
+            color: #e2e8f0; 
+            padding: 15px; 
+            border-radius: 8px; 
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            border: none;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .vega-container { 
+            border: 2px solid #cbd5e0; 
+            margin: 15px 0; 
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            min-height: 60px;
+        }
+        button {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 8px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        button:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .interactive-area {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        textarea {
+            width: calc(100% - 20px);
+            padding: 15px;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+        }
+        .status {
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        .status.success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+        .status.error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #feb2b2;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 HTML to Vega-Lite</h1>
+        <p style="text-align: center; font-size: 1.2em; color: #4a5568;">
+            Convert HTML formatting to Vega-Lite text visualizations
+        </p>
+
+        <!-- Quick Demo -->
+        <div class="demo-section">
+            <h3>✨ Quick Demo</h3>
+            <div class="html-input">
+&lt;b&gt;Sales Report:&lt;/b&gt; Revenue increased by &lt;span style="color: green"&gt;25%&lt;/span&gt; this quarter! &lt;u&gt;Important note&lt;/u&gt; below.
+            </div>
+            <button onclick="runQuickDemo()">🎯 Render Demo</button>
+            <div id="quickDemo" class="vega-container"></div>
+        </div>
+
+        <!-- Interactive Playground -->
+        <div class="demo-section">
+            <h3>🎮 Interactive Playground</h3>
+            <div class="interactive-area">
+                <label for="htmlInput"><strong>Enter your HTML:</strong></label>
+                <textarea id="htmlInput" placeholder="Try: <b>Bold</b> and <i>italic</i> text with <span style='color: red'>colors</span>!">
+&lt;b&gt;Your HTML here!&lt;/b&gt; Try &lt;i&gt;italic&lt;/i&gt;, &lt;u&gt;underline&lt;/u&gt;, and &lt;span style="color: purple; font-weight: bold"&gt;colored text&lt;/span&gt;.
+                </textarea>
+                <div>
+                    <button onclick="renderCustomHTML()">🎨 Render HTML</button>
+                    <button onclick="showHTMLInfo()">ℹ️ Show Info</button>
+                    <button onclick="loadExample(1)">📝 Example 1</button>
+                    <button onclick="loadExample(2)">📝 Example 2</button>
+                    <button onclick="loadExample(3)">📝 Example 3</button>
+                </div>
+                <div id="customStatus"></div>
+                <div id="customResult" class="vega-container"></div>
+            </div>
+        </div>
+
+        <!-- Features Demo -->
+        <div class="demo-section">
+            <h3>🛠️ Features</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Basic Tags</h4>
+                    <button onclick="demoBasicTags()">Demo</button>
+                    <div id="basicTags" class="vega-container" style="min-height: 40px;"></div>
+                </div>
+                <div class="feature-card">
+                    <h4>Nested Formatting</h4>
+                    <button onclick="demoNested()">Demo</button>
+                    <div id="nested" class="vega-container" style="min-height: 40px;"></div>
+                </div>
+                <div class="feature-card">
+                    <h4>Colors & Styles</h4>
+                    <button onclick="demoColors()">Demo</button>
+                    <div id="colors" class="vega-container" style="min-height: 40px;"></div>
+                </div>
+                <div class="feature-card">
+                    <h4>Text Wrapping</h4>
+                    <button onclick="demoWrapping()">Demo</button>
+                    <div id="wrapping" class="vega-container" style="min-height: 40px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information -->
+        <div class="demo-section">
+            <h3>📖 Supported HTML Tags</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Text Formatting</h4>
+                    <ul>
+                        <li><code>&lt;b&gt;</code>, <code>&lt;strong&gt;</code> - Bold</li>
+                        <li><code>&lt;i&gt;</code>, <code>&lt;em&gt;</code> - Italic</li>
+                        <li><code>&lt;u&gt;</code> - Underline</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>Styled Elements</h4>
+                    <ul>
+                        <li><code>&lt;span style="color: red"&gt;</code> - Colors</li>
+                        <li><code>&lt;span style="font-weight: bold"&gt;</code> - Weight</li>
+                        <li><code>&lt;span style="font-style: italic"&gt;</code> - Style</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Use the actual HTML to Vega-Lite library
+        const converter = new HTMLVegaLite.HTMLToVegaLite();
+
+        // Demo functions
+        async function runQuickDemo() {
+            const html = '<b>Sales Report:</b> Revenue increased by <span style="color: green">25%</span> this quarter! <u>Important note</u> below.';
+            const spec = converter.convert(html);
+            await vegaEmbed('#quickDemo', spec, { actions: false });
+        }
+
+        async function renderCustomHTML() {
+            const html = document.getElementById('htmlInput').value;
+            const statusDiv = document.getElementById('customStatus');
+            
+            try {
+                const spec = converter.convert(html);
+                await vegaEmbed('#customResult', spec, { actions: false });
+                statusDiv.innerHTML = '<div class="status success">✅ Successfully rendered!</div>';
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        function showHTMLInfo() {
+            const html = document.getElementById('htmlInput').value;
+            const statusDiv = document.getElementById('customStatus');
+            
+            try {
+                const segments = converter.parseHTML(html);
+                const info = `
+                    <div class="status success">
+                        📊 Parse Info: ${segments.length} text segments found<br>
+                        🏷️ Styles: ${new Set(segments.map(s => `${s.fontWeight}-${s.fontStyle}-${s.color}`)).size} unique styles
+                    </div>
+                `;
+                statusDiv.innerHTML = info;
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">❌ Parse Error: ${error.message}</div>`;
+            }
+        }
+
+        const examples = [
+            '<b>Bold</b> and <i>italic</i> text',
+            '<span style="color: red; font-weight: bold">Error:</span> Something went wrong!',
+            '<b>Dashboard:</b> <span style="color: green">●</span> Online <span style="color: blue">ℹ</span> 5 users active'
+        ];
+
+        function loadExample(num) {
+            document.getElementById('htmlInput').value = examples[num - 1];
+            renderCustomHTML();
+        }
+
+        // Feature demos
+        async function demoBasicTags() {
+            const html = '<b>Bold</b>, <i>italic</i>, and <u>underlined</u> text';
+            const spec = converter.convert(html);
+            await vegaEmbed('#basicTags', spec, { actions: false });
+        }
+
+        async function demoNested() {
+            const html = '<b>Bold with <i>nested italic</i> text</b>';
+            const spec = converter.convert(html);
+            await vegaEmbed('#nested', spec, { actions: false });
+        }
+
+        async function demoColors() {
+            const html = '<span style="color: red">Red</span>, <span style="color: blue">Blue</span>, <span style="color: green">Green</span>';
+            const spec = converter.convert(html);
+            await vegaEmbed('#colors', spec, { actions: false });
+        }
+
+        async function demoWrapping() {
+            const html = '<b>This is a longer text</b> that demonstrates text wrapping when it exceeds the maximum width.';
+            const spec = converter.convert(html, { maxWidth: 200 });
+            await vegaEmbed('#wrapping', spec, { actions: false });
+        }
+
+        // Auto-run quick demo on load
+        window.addEventListener('load', () => {
+            setTimeout(runQuickDemo, 500);
+        });
+    </script>
+</body>
+</html>

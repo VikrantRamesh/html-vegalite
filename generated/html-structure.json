@@ -1,0 +1,183 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 331.59999999999997,
+  "height": 108.4,
+  "background": "transparent",
+  "padding": 0,
+  "autosize": "none",
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  },
+  "resolve": {
+    "scale": {
+      "x": "independent",
+      "y": "independent"
+    }
+  },
+  "layer": [
+    {
+      "data": {
+        "values": [
+          {
+            "id": 0,
+            "text": "Main Title",
+            "x": 20,
+            "y": 30
+          },
+          {
+            "id": 1,
+            "text": "Subtitle",
+            "x": 144.2,
+            "y": 30
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 18,
+        "fontFamily": "Arial, sans-serif",
+        "fontWeight": "bold",
+        "fontStyle": "normal",
+        "color": "#000000",
+        "align": "left",
+        "baseline": "top"
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              331.59999999999997
+            ]
+          }
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              108.4
+            ]
+          }
+        },
+        "text": {
+          "field": "text",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "id": 2,
+            "text": "This is a paragraph with a ",
+            "x": 20,
+            "y": 55.2
+          },
+          {
+            "id": 4,
+            "text": ".",
+            "x": 117.19999999999999,
+            "y": 80.4
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 18,
+        "fontFamily": "Arial, sans-serif",
+        "fontWeight": "normal",
+        "fontStyle": "normal",
+        "color": "#000000",
+        "align": "left",
+        "baseline": "top"
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              331.59999999999997
+            ]
+          }
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              108.4
+            ]
+          }
+        },
+        "text": {
+          "field": "text",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "id": 3,
+            "text": "hyperlink",
+            "x": 20,
+            "y": 80.4
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 18,
+        "fontFamily": "Arial, sans-serif",
+        "fontWeight": "normal",
+        "fontStyle": "normal",
+        "color": "#0066CC",
+        "align": "left",
+        "baseline": "top"
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              331.59999999999997
+            ]
+          }
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              108.4
+            ]
+          }
+        },
+        "text": {
+          "field": "text",
+          "type": "nominal"
+        }
+      }
+    }
+  ]
+}

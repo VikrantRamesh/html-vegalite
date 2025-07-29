@@ -1,0 +1,28 @@
+{
+  "name": "html-vegalite-examples",
+  "version": "1.0.0",
+  "description": "Examples for html-vegalite library",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "basic": "serve . --port 3000",
+    "node": "node node-example.js",
+    "node-gc": "node --expose-gc node-example.js",
+    "build-examples": "node node-example.js",
+    "clean": "rm -rf generated",
+    "preview": "serve generated --port 3001"
+  },
+  "dependencies": {
+    "html-vegalite": "file:../",
+    "serve": "^14.0.0"
+  },
+  "keywords": [
+    "vega-lite",
+    "html",
+    "examples",
+    "visualization"
+  ],
+  "engines": {
+    "node": ">=16"
+  }
+}
