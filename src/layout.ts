@@ -1,4 +1,5 @@
 import { TextStyle, TextSegment, PositionedTextSegment, TextMeasurement, HTMLToVegaLiteOptions } from './types';
+import { inverseHeadingSizes } from './constants';
 
 /**
  * Text layout engine that positions text segments
@@ -88,6 +89,30 @@ export class TextLayoutEngine {
     };
   }
 
+   /**
+   * Check if a text segment is a heading style
+   */
+  private isHeadingStyle(segment: TextSegment, measurement: { height: number }): boolean {
+    const size = measurement.height;
+
+    return segment.fontWeight === 'bold' && inverseHeadingSizes[segment.fontSize ?? 0] !== undefined;
+  }
+
+  /**
+   * Check if a text segment is unstyled (No HTML Tag applied)
+   */
+  private isUnstyledSegment(segment: TextSegment): boolean {
+    const color = segment.color?.toLowerCase();
+
+    return (
+      segment.fontWeight === 'normal' &&
+      segment.fontStyle === 'normal' &&
+      segment.textDecoration === 'none' &&
+      (!color || color === '#000' || color === '#000000')
+    );
+  }
+
+
   /**
    * Layout text segments with positioning and line wrapping
    */
@@ -107,6 +132,15 @@ export class TextLayoutEngine {
       
       // Check if this segment needs word wrapping
       const measurement = this.measureText(segment.text, segment);
+      const segmentLineHeight = Math.max(this.lineHeight, measurement.height);
+
+      const isHeading = this.isHeadingStyle(segment, measurement);
+
+      // Add spacing before heading if not already at new line
+      if (isHeading && currentX > this.startX) {
+        currentX = this.startX;
+        currentY += segmentLineHeight * 0.75;
+      }
       
       if (measurement.width > wrapWidth && segment.text.includes(' ')) {
         // Word wrap this segment
@@ -156,18 +190,31 @@ export class TextLayoutEngine {
         // Line wrapping logic for segments that don't need word wrapping
         if (currentX > this.startX && currentX + measurement.width > wrapWidth) {
           currentX = this.startX;
-          currentY += this.lineHeight;
+          currentY += segmentLineHeight;
         }
+
+        const isUnstyled = this.isUnstyledSegment(segment);
+
+        // Apply small offset for unstyled text (e.g., 2px)
+        const offsetX = isUnstyled ? 2 : 0;
 
         positioned.push({
           ...segment,
-          x: currentX,
-          y: currentY, // Keep as top-based for internal layout
+          x: currentX + offsetX, 
+          y: currentY + (segmentLineHeight - measurement.height), // Keep as top-based for internal layout
           width: measurement.width,
           height: measurement.height
         });
 
         currentX += measurement.width;
+        const spaceMeasurement = this.measureText(' ', segment);
+        currentX += spaceMeasurement.width;
+
+        // Add vertical spacing after heading
+        if (isHeading) {
+          currentX = this.startX;
+          currentY += segmentLineHeight * 1.2;
+        }
       }
     }
 
