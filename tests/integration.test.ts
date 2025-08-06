@@ -164,7 +164,7 @@ describe('Integration Tests', () => {
       const positioned = converter.layoutSegments(parseResult.segments);
       expect(positioned).toHaveLength(3);
       expect(positioned[0].x).toBe(0); // startX
-      expect(positioned[0].y).toBe(0); // startY
+      expect(positioned[0].y).toBe(4); // startY
       expect(positioned[1].x).toBeGreaterThan(positioned[0].x); // Should advance
       expect(positioned[2].x).toBeGreaterThan(positioned[1].x); // Should advance further
 

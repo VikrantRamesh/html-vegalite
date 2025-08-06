@@ -23,5 +23,6 @@ export const colorMap: Record<string, string> = {
     'yellow': '#FFFF00',
     'orange': '#FFA500',
     'purple': '#800080',
+    'black': "#000000"
     // TODO Add more colors as needed
   };

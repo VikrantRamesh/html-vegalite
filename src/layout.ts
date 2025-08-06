@@ -1,5 +1,5 @@
 import { TextStyle, TextSegment, PositionedTextSegment, TextMeasurement, HTMLToVegaLiteOptions } from './types';
-import { inverseHeadingSizes } from './constants';
+import { colorMap, inverseHeadingSizes } from './constants';
 
 /**
  * Text layout engine that positions text segments
@@ -108,7 +108,7 @@ export class TextLayoutEngine {
       segment.fontWeight === 'normal' &&
       segment.fontStyle === 'normal' &&
       segment.textDecoration === 'none' &&
-      (!color || color === '#000' || color === '#000000')
+      (!color || color === colorMap['black'])
     );
   }
 
