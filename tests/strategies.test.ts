@@ -350,7 +350,7 @@ describe('Tag Strategies', () => {
 
     it('should return correct tag names', () => {
       const tagNames = strategy.getTagNames();
-      expect(tagNames).toEqual(['red', 'green', 'blue', 'yellow', 'orange', 'purple']);
+      expect(tagNames).toEqual(['red', 'green', 'blue', 'yellow', 'orange', 'purple', 'black']);
     });
 
     it('should apply red color', () => {

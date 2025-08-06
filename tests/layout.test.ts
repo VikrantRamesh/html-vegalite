@@ -39,8 +39,8 @@ describe('TextLayoutEngine', () => {
 
       expect(positioned).toHaveLength(1);
       expect(positioned[0].text).toBe('Hello World');
-      expect(positioned[0].x).toBe(10); // startX
-      expect(positioned[0].y).toBe(30); // startY
+      expect(positioned[0].x).toBe(12); // startX (offset for unstyled text)
+      expect(positioned[0].y).toBe(36); // startY
       expect(positioned[0].fontWeight).toBe('normal');
       expect(positioned[0].fontStyle).toBe('normal');
       expect(positioned[0].color).toBe('#000000');
@@ -109,7 +109,7 @@ describe('TextLayoutEngine', () => {
       expect(positioned).toHaveLength(1);
       expect(positioned[0].text).toBe('');
       expect(positioned[0].x).toBe(10);
-      expect(positioned[0].y).toBe(30);
+      expect(positioned[0].y).toBe(36);
     });
 
     it('should position segments with different font weights correctly', () => {
@@ -296,7 +296,7 @@ describe('TextLayoutEngine', () => {
       const positioned = layoutEngine.layoutSegments(segments);
 
       expect(positioned[0].x).toBe(20); // New startX
-      expect(positioned[0].y).toBe(40); // New startY
+      expect(positioned[0].y).toBe(48); // New startY (Change in vertical positioning after Heading)
     });
   });
 
@@ -348,6 +348,61 @@ describe('TextLayoutEngine', () => {
       expect(positioned).toHaveLength(2);
       expect(positioned[0].fontWeight).toBe('normal');
       expect(positioned[1].fontWeight).toBe('bold');
+    });
+
+    it('should handle space between two adjecent tags', () => {
+      const segments: TextSegment[] = [
+        {
+          text: 'italics text',
+          fontWeight: 'normal',
+          fontStyle: 'italic',
+          color: '#000000'
+        },
+        {
+          text: 'Bold text',
+          fontWeight: 'bold',
+          fontStyle: 'normal',
+          color: '#000000'
+        }
+      ];
+
+      const positioned = layoutEngine.layoutSegments(segments);
+
+      // Both should be positioned, with a space between the two segements.
+      expect(positioned).toHaveLength(2);
+      expect(positioned[0].fontStyle).toBe('italic');
+      expect(positioned[0].fontWeight).toBe('normal');
+      expect(positioned[1].fontWeight).toBe('bold');
+      expect(positioned[1].fontStyle).toBe('normal');
+
+      // Check X positioning
+      const firstSegmentRight = positioned[0].x + positioned[0].width;
+      const secondSegmentX = positioned[1].x;  
+
+      // Measure expected space width
+      const spaceWidth = layoutEngine.measureText(' ', positioned[0]).width;
+
+      // Assert spacing is at least 1 space wide (with slight tolerance)
+      expect(secondSegmentX).toBeCloseTo(firstSegmentRight + spaceWidth, 1);
+    });
+
+    it('should have appropriate vertical spacing for heading tag', () => {
+      const segments: TextSegment[] = [
+        {
+          text: 'Heading 1',
+          fontSize: 32,
+          fontWeight: 'bold',
+          fontStyle: 'normal',
+          color: '#000000'
+        },
+      ];
+
+      const positioned = layoutEngine.layoutSegments(segments);
+
+      // Both should be positioned, with adequate vertical spacing
+      expect(positioned).toHaveLength(1);
+      expect(positioned[0].fontSize).toBe(32);
+      expect(positioned[0].y).toBe(30);
     });
   });
 
