@@ -1,6 +1,6 @@
 {
   "name": "html-vegalite",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Convert HTML with formatting tags to Vega-Lite text specifications",
   "type": "module",
   "main": "dist/index.js",
