@@ -89,13 +89,13 @@ describe('HTMLParser', () => {
       expect(result.segments[0].text).toBe('Bold');
       expect(result.segments[0].fontWeight).toBe('bold');
       
-      expect(result.segments[1].text).toBe(' and ');
+      expect(result.segments[1].text).toBe('and');
       expect(result.segments[1].fontWeight).toBe('normal');
       
       expect(result.segments[2].text).toBe('italic');
       expect(result.segments[2].fontStyle).toBe('italic');
       
-      expect(result.segments[3].text).toBe(' text');
+      expect(result.segments[3].text).toBe('text');
       expect(result.segments[3].fontWeight).toBe('normal');
     });
 
@@ -104,7 +104,7 @@ describe('HTMLParser', () => {
       
       expect(result.segments).toHaveLength(2);
       
-      expect(result.segments[0].text).toBe('Bold ');
+      expect(result.segments[0].text).toBe('Bold');
       expect(result.segments[0].fontWeight).toBe('bold');
       expect(result.segments[0].fontStyle).toBe('normal');
       

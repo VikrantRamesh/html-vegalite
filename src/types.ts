@@ -7,6 +7,11 @@ export interface TextStyle {
   color: string;
   textDecoration?: 'none' | 'underline' | 'line-through';
   fontSize?: number;
+  verticalOffset?: number; // Negative for superscript, positive for subscript
+  // List context properties
+  isListItem?: boolean;
+  listNestingLevel?: number;
+  listType?: 'ul' | 'ol';
 }
 
 /**
@@ -14,6 +19,10 @@ export interface TextStyle {
  */
 export interface TextSegment extends TextStyle {
   text: string;
+  /** Whether this segment should have a space after it (based on original HTML) */
+  hasSpaceAfter?: boolean;
+  /** The type of spacing context for this segment */
+  spacingContext?: 'tag-to-tag' | 'text-to-tag' | 'tag-to-text' | 'text-to-text' | 'list-prefix';
 }
 
 /**
@@ -39,7 +48,7 @@ export interface HTMLToVegaLiteOptions {
   /** Starting Y coordinate */
   startY?: number;
   /** Line height multiplier */
-  lineHeight?: number;
+  lineHeight?: number | undefined;
   /** Maximum width before wrapping */
   maxWidth?: number;
   /** Background color */

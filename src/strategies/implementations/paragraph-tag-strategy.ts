@@ -19,4 +19,11 @@ export class ParagraphTagStrategy extends BaseTagStrategy {
   public getTagNames(): string[] {
     return ['p'];
   }
+
+  /**
+   * Paragraph tags should create line breaks for proper formatting
+   */
+  public isLineBreak(): boolean {
+    return true;
+  }
 }

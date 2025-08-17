@@ -1,5 +1,7 @@
 import { TextStyle, TextSegment, ParseResult } from './types';
 import { TagStrategy, TagStrategyRegistry, createDefaultTagStrategyRegistry } from './strategies/index';
+import { ListTagStrategy } from './strategies/implementations/list-tag-strategy';
+import { SpacingAnalyzer } from './spacing-analyzer';
 
 /**
  * HTML Parser with extensible tag strategy system
@@ -17,6 +19,18 @@ export class HTMLParser {
   }
 
   /**
+   * Check if we need a line break before this segment
+   */
+  private needsLineBreak(segments: TextSegment[]): boolean {
+    if (segments.length === 0) return false;
+    
+    const lastSegment = segments[segments.length - 1];
+    return lastSegment !== undefined && 
+           lastSegment.text !== '\n' && 
+           lastSegment.text.trim() !== '';
+  }
+
+  /**
    * Parse HTML string into text segments with styling information
    * Uses strategy pattern for extensible tag handling
    */
@@ -31,12 +45,17 @@ export class HTMLParser {
     }
     
     try {
+      // Reset list state for clean parsing
+      ListTagStrategy.resetListState();
+      
       // Enhanced regex pattern to capture more tag types
       const tagPattern = /<(\/?)([a-zA-Z][a-zA-Z0-9]*)([^>]*)>/gi;
       const parts = html.split(tagPattern);
       
       let currentStyle: TextStyle = this.getDefaultStyle();
       const styleStack: TextStyle[] = [{ ...currentStyle }];
+      let isInListItem = false;
+      let listItemPrefixAdded = false;
       
       for (let i = 0; i < parts.length; i++) {
         const part = parts[i];
@@ -46,17 +65,45 @@ export class HTMLParser {
         // Check if this is a tag
         if (i % 4 === 1) { // Closing tag indicator
           if (part === '/') {
+            // Get the closing tag name
+            const closingTagName = parts[i + 1]?.toLowerCase();
+            
+            // Handle list tag cleanup
+            if (closingTagName && (closingTagName === 'ul' || closingTagName === 'ol')) {
+              ListTagStrategy.handleClosingTag(closingTagName);
+            }
+            
+            // Reset list item state when closing li tag
+            if (closingTagName === 'li') {
+              isInListItem = false;
+              listItemPrefixAdded = false;
+            }
+            
+            // Add line breaks after closing block-level tags
+            if (closingTagName) {
+              const isBlockElement = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol'].includes(closingTagName);
+              
+              if (isBlockElement) {
+                // Check if there's more meaningful content coming after this element
+                const remainingContent = parts.slice(i + 2).join('');
+                const hasMoreContent = remainingContent.trim().length > 0;
+                
+                if (hasMoreContent) {
+                  segments.push({
+                    text: '\n',
+                    ...currentStyle
+                  });
+                }
+              }
+            }
+            
             // Pop style stack for closing tag
             if (styleStack.length > 1) {
               styleStack.pop();
               const prevStyle = styleStack[styleStack.length - 1];
               if (prevStyle) {
-                currentStyle = {
-                  fontWeight: prevStyle.fontWeight,
-                  fontStyle: prevStyle.fontStyle,
-                  color: prevStyle.color,
-                  textDecoration: prevStyle.textDecoration ?? 'none'
-                };
+                // Restore all properties from previous style
+                currentStyle = { ...prevStyle };
               }
             }
           }
@@ -78,11 +125,69 @@ export class HTMLParser {
               
               // Check if this is a line break strategy
               if (strategy.isLineBreak && strategy.isLineBreak()) {
-                // Insert a newline character for line breaks
-                segments.push({
-                  text: '\n',
-                  ...currentStyle
-                });
+                // Special handling for list items - they need line breaks but also track state
+                if (tagName === 'li') {
+                  isInListItem = true;
+                  listItemPrefixAdded = false;
+                  
+                  // Add line break before list item if needed
+                  if (this.needsLineBreak(segments)) {
+                    segments.push({
+                      text: '\n',
+                      ...currentStyle
+                    });
+                  }
+                  
+                  // Apply styling for list item
+                  const newStyle = strategy.applyStyle(currentStyle, attributes, tagName);
+                  styleStack.push(newStyle);
+                  currentStyle = newStyle;
+                } else if (tagName === 'ul' || tagName === 'ol') {
+                  // Add line break before list container if needed
+                  if (this.needsLineBreak(segments)) {
+                    segments.push({
+                      text: '\n',
+                      ...currentStyle
+                    });
+                  }
+                  
+                  // Apply styling for list container
+                  const newStyle = strategy.applyStyle(currentStyle, attributes, tagName);
+                  styleStack.push(newStyle);
+                  currentStyle = newStyle;
+                } else if (tagName === 'p') {
+                  // Add line break before paragraph if needed
+                  if (this.needsLineBreak(segments)) {
+                    segments.push({
+                      text: '\n',
+                      ...currentStyle
+                    });
+                  }
+                  
+                  // Apply styling for paragraph
+                  const newStyle = strategy.applyStyle(currentStyle, attributes, tagName);
+                  styleStack.push(newStyle);
+                  currentStyle = newStyle;
+                } else if (['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tagName)) {
+                  // Add line break before heading if needed
+                  if (this.needsLineBreak(segments)) {
+                    segments.push({
+                      text: '\n',
+                      ...currentStyle
+                    });
+                  }
+                  
+                  // Apply styling for heading
+                  const newStyle = strategy.applyStyle(currentStyle, attributes, tagName);
+                  styleStack.push(newStyle);
+                  currentStyle = newStyle;
+                } else {
+                  // Regular line break elements (like <br>)
+                  segments.push({
+                    text: '\n',
+                    ...currentStyle
+                  });
+                }
               } else {
                 // Apply styling using strategy
                 const newStyle = strategy.applyStyle(currentStyle, attributes, tagName);
@@ -96,19 +201,48 @@ export class HTMLParser {
           }
         } else if (i % 4 === 0) { // Text content
           if (part.trim()) {
+            let textContent = part;
+            
+            // Add list item prefix if we're in a list item and haven't added it yet
+            if (isInListItem && !listItemPrefixAdded) {
+              const prefix = ListTagStrategy.getListItemPrefix('li');
+              
+              // Create separate segment for prefix with clean list item style (no inherited decorations)
+              const prefixStyle = { ...currentStyle };
+              prefixStyle.textDecoration = 'none'; // No text decoration for prefix
+              prefixStyle.fontWeight = 'normal'; // No bold/font weight inheritance
+              prefixStyle.fontStyle = 'normal'; // No italic inheritance
+              prefixStyle.color = '#000000'; // Reset color to default black
+              
+              segments.push({
+                text: prefix,
+                ...prefixStyle,
+                hasSpaceAfter: true, // Always add consistent space after prefix
+                spacingContext: 'list-prefix' // Special context for consistent spacing
+              });
+              
+              // Trim the content since prefix handles the spacing
+              textContent = textContent.trimStart();
+              listItemPrefixAdded = true;
+            }
+            
+            // Create segment for the actual content with current style (including any text decoration)
             segments.push({
-              text: part,
+              text: textContent,
               ...currentStyle
             });
           }
         }
       }
       
-      const result: ParseResult = { 
-        segments,
-        errors: errors.length > 0 ? errors : []
-      };
-      return result;
+              // Apply intelligent spacing analysis to segments
+        const spacedSegments = SpacingAnalyzer.analyzeAndAssignSpacing(segments, html);
+        
+        const result: ParseResult = { 
+          segments: spacedSegments,
+          errors: errors.length > 0 ? errors : []
+        };
+        return result;
       
     } catch (error) {
       return {
